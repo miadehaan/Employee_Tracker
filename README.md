@@ -4,7 +4,7 @@
 
 
 ## Description 
-This application utilizes node, inquirer, &amp; MySQL to help a company manage is employees, as well as their departments and roles. 
+This CLI application utilizes node, inquirer, &amp; MySQL to help a company manage is employees, as well as their departments and roles. A database is created and contains three different tables: department, role, and employee.  
 
 ## Table of Contents
 - [Description](#Description)

@@ -1,0 +1,25 @@
+{
+  "name": "employee_tracker",
+  "version": "1.0.0",
+  "description": "CLI application to track employees ",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/miadehaan/Employee_Tracker.git"
+  },
+  "keywords": [
+    "node",
+    "inquirer",
+    "MySQL"
+  ],
+  "author": "Mia de Haan",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/miadehaan/Employee_Tracker/issues"
+  },
+  "homepage": "https://github.com/miadehaan/Employee_Tracker#readme"
+}
