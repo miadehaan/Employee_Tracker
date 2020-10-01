@@ -12,5 +12,32 @@ var connection = mysql.createConnection({
 
 connection.connect(function(err) {
     if (err) throw err;
-    // run the inquirer function
+    run();
 });
+
+// run inquirer
+function run() {
+    inquirer
+    .prompt([
+        {
+            name: "action",
+            type: "rawlist",
+            message: "What would you like to do?",
+            choices: [
+                // write out options here
+                "Add departments, roles, employees",
+                "View departments, roles, employees",
+                "Update employee roles",
+                "Update employee managers",
+                " View employees by manager",
+                "Delete departments, roles, and employees",
+                "View the total utilized budget of a department -- ie the combined salaries of all employees in that department",
+                "exit"
+            ]
+        }
+    ]).then( (resp) => {
+        // swtich statement with functions on what to run next...
+        console.log(resp.action);
+    });
+
+}
