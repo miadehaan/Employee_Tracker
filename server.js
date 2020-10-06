@@ -26,8 +26,8 @@ function runMenu() {
             message: "What would you like to do?",
             choices: [
                 // write out menu options here
-                "Add Employee",
-                "View departments, roles, employees",
+                "Add department, role, or employee",
+                "View departments, roles, or employees",
                 "Update employee roles"
             ]
         }
@@ -36,10 +36,10 @@ function runMenu() {
         console.log(resp.action);
 
         switch(resp.action) {
-            case "Add Employee": 
+            case "Add department, role, or employee": 
                 add();
                 break;
-            case "View departments, roles, employees":
+            case "View departments, roles, or employees":
                 view()
                 break;
             case "Update employee roles":
@@ -51,8 +51,98 @@ function runMenu() {
 
 }
 
-// Add new Employee
+// Add new department, role, or employee
 function add() {
+    inquirer.prompt([
+        {
+            name: "addType",
+            type: "rawlist",
+            choices: [
+                "add new department",
+                "add new role",
+                "add new employee"
+            ],
+            message: "Select which table you would like to add to:"
+        }
+    ]).then( (resp) => {
+        if (resp.addType === "add new department") {
+            addDepartment();
+        }
+        else if (resp.addType === "add new role") {
+            addRole();
+        }
+        else if (resp.addType === "add new employee") {
+            addEmployee();
+        }
+        
+    });
+}
+
+function addDepartment() {
+    inquirer.prompt([
+        {
+            name: "department",
+            type: "input",
+            message: "What is the new department name?"
+        }
+    ]).then(function(answer){
+        // store info to DB & add to 'employee' table
+        var query = "INSERT INTO departments SET ?";
+        connection.query(query, {name: answer.department}, function(err, res){
+            if (err) throw err;
+        });
+
+        //Display only the employee table:
+        connection.query("SELECT * FROM departments", function(err, res) {
+            if (err) throw err;
+            // Display the employee table
+            console.table(res);
+            runMenu(); // Restart main menu
+        });
+    });
+}
+
+function addRole() {
+    inquirer.prompt([
+        {
+            name: "title",
+            type: "input",
+            message: "What is the title of this new role?"
+        },
+        {
+            name: "salary",
+            type: "input",
+            message: "What's the salary for this new role'?"
+        },
+        {
+            name: "department_id",
+            type: "input",
+            message: "What's the department's id #?"
+        }
+    ]).then(function(answer){
+        const values = {
+            title: answer.title, 
+            salary: parseFloat(answer.salary), // change to decimal # / float?
+            department_id: parseInt(answer.department_id)
+        };
+
+        // store info to DB & add to 'employee' table
+        var query = "INSERT INTO roles SET ?";
+        connection.query(query, values, function(err, res){
+            if (err) throw err;
+        });
+
+        //Display only the employee table:
+        connection.query("SELECT * FROM roles", function(err, res) {
+            if (err) throw err;
+            // Display the employee table
+            console.table(res);
+            runMenu(); // Restart main menu
+        });
+    });
+}
+
+function addEmployee() {
     inquirer.prompt([
         {
             name: "first_name",
@@ -75,29 +165,30 @@ function add() {
             message: "What's the employee's manager id #?"
         }
     ]).then(function(answer){
-        const values = [
-            [answer.first_name], 
-            [answer.last_name], 
-            [parseInt(answer.role_id)], 
-            [parseInt(answer.manager_id)]
-        ];
+        const values = {
+            first_name: answer.first_name, 
+            last_name: answer.last_name, 
+            role_id: parseInt(answer.role_id), 
+            manager_id: parseInt(answer.manager_id)
+        };
 
         // store info to DB & add to 'employee' table
-        var query = "INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES ?";
-        connection.query(query, [values], function(err, res){
+        var query = "INSERT INTO employees SET ?";
+        connection.query(query, values, function(err, res){
             if (err) throw err;
             console.log("new employee was added!");
         });
 
-        // // Display the updated employee table
-        // connection.query("SELECT * FROM employees", function(err, res){
-        //     if (err) throw err;
-        //     console.table(res);       
-        // });
+        //Display only the employee table:
+        connection.query("SELECT * FROM employees", function(err, res) {
+            if (err) throw err;
+            // Display the employee table
+            console.table(res);
+            runMenu(); // Restart main menu
+        });
     });
-
-
 }
+
 
 // View departments, roles, employees
 function view() {
@@ -119,11 +210,9 @@ function view() {
 
             connection.query(query, function(err, res) {
                 if (err) throw err;
-
                 // Display the employee table
                 // console.table(res);
-                cTable(res);
-
+                console.table(res);
                 runMenu(); // Restart main menu
             });
         }
@@ -133,10 +222,8 @@ function view() {
 
             connection.query(query, function(err, res) {
                 if (err) throw err;
-
                 // Display the employee table
                 console.table(res);
-
                 runMenu(); // Restart main menu
             });
         }
@@ -146,10 +233,8 @@ function view() {
 
             connection.query(query, function(err, res) {
                 if (err) throw err;
-
                 // Display the employee table
                 console.table(res);
-
                 runMenu(); // Restart main menu
             });
         }
@@ -162,8 +247,35 @@ function view() {
 
 // Update employee roles
 function update() {
+    // ask user employee id and role id
+    inquirer.prompt([
+        {
+            name: "role_id",
+            type: "input",
+            message: "Please provide the new role id #:"
+        },
+        {
+            name: "employee_id",
+            type: "input",
+            message: "Please provide the employee id # that you would like to update:"
+        },
+    ]).then(function(resp){
+        var values = [
+            {
+                role_id: resp.role_id
+            },
+            {
+                id: resp.employee_id
+            }
+        ]
+        var query = "UPDATE employees SET ? WHERE ?";
+        connection.query(query, values, function(err, res) {
+            if (err) throw err;
+            // console.log("The effect rows within the table is: " + res.affectedRows);
+            runMenu(); // Restart main menu
+        });
+    });
+
+
     
-
-
-    // runMenu(); // Restart main menu
 }

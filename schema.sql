@@ -7,30 +7,22 @@ CREATE TABLE departments (
     name VARCHAR(30) UNIQUE NOT NULL
 );
 
-INSERT INTO DEPARTMENTS (NAME) VALUES ("ACCOUNTING");
-INSERT INTO DEPARTMENTS (NAME) VALUES ("ENGINEERING");
-INSERT INTO DEPARTMENTS (NAME) VALUES ("SALES");
-
 CREATE TABLE roles (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    title VARCHAR(30) NOT NULL,
+    title VARCHAR(30) UNIQUE NOT NULL,
     salary DECIMAL NOT NULL,
-    department_id INT NOT NULL
-    -- INDEX dep_ind (department_id)
-    -- CONSTRAINT fk_department    
+    department_id INT UNSIGNED NOT NULL,
+    INDEX dep_ind (department_id),
+    CONSTRAINT fk_roles_department FOREIGN KEY (department_id) REFERENCES departments(id) ON DELETE CASCADE
 );
-INSERT INTO ROLES (TITLE, SALARY, DEPARTMENT_ID) VALUES ("ACCOUNTANT", 60000, 4);
-INSERT INTO ROLES (TITLE, SALARY, DEPARTMENT_ID) VALUES ("SOFTWARE ENGINEER", 60000, 4);
-INSERT INTO ROLES (TITLE, SALARY, DEPARTMENT_ID) VALUES ("SALES ASSOCIATE", 60000, 4);
 
 CREATE TABLE employees (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     first_name VARCHAR(30) NOT NULL,
     last_name VARCHAR(30) NOT NULL,
-    role_id INT NOT NULL,
-    manager_id INT NOT NULL 
+    role_id INT UNSIGNED NOT NULL,
+    INDEX role_ind (role_id),
+    CONSTRAINT fk_roles FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE CASCADE,
+    manager_id INT NOT NULL
 );
 -- Use SQL foreign keys to link two tables together
-
-INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES ('Zella', 'Smith', '1', '12');
-INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES ('Jay', 'Abrigo', '3', '12');
