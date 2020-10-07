@@ -4,28 +4,45 @@
 
 
 ## Description 
-This CLI application utilizes node, inquirer, &amp; MySQL to help a company manage is employees, as well as their departments and roles. A database is created and contains three different tables: department, role, and employee.  
+This CLI application utilizes node, inquirer, &amp; MySQL to help a company manage it's employees, as well as their departments and roles. A database is created and contains three different tables: department, role, and employee.  
 
 ## Table of Contents
 - [Description](#Description)
 - [Installation](#Installation)
 - [Usage](#Usage)
 - [Technologies](#Technologies)
+- [Example](#Example)
 - [License](#License)
 - [Contribution](#Contribution)
 - [Questions](#Questions)
 
 
 ## Installation
-Installation instructions...
+To install this application, run the following in your command line:
+
+```
+npm install
+```
+
+The application will be invoked with the following command:
+
+```
+node index.js
+```
     
 ## Usage
 This project will be used for companies that need an employee management system. 
 
 ## Technologies
-- node.js
+- Node.js
 - inquirer npm package
 - MySQL
+
+## Example
+
+![gif](./Assets/CL_example.gif)
+
+[View Full Video Example Here](https://drive.google.com/file/d/1YSRylIvnc9BqHNCUOEaLuNjoUQJ8ytBa/view)
     
 ## License
 This application is covered under MIT.
